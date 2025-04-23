@@ -1,54 +1,34 @@
 import pytest
 import time
+from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.common.exceptions import TimeoutException
-from pages.store_page import StorePage
 
+from pages.store_page import StorePage
+from utils.constants import PRODUCT_PAGE_URL, VALID_USER
 
 @pytest.mark.usefixtures("driver_init")
 class TestAgeModalStateTransition:
-    def test_age_modal_reappearance_in_new_tab(self):
-        """
-        Test Case: Reappearance of the age verification modal in a new tab.
-        Steps:
-          - Access the alcohol section and confirm age.
-          - Open the alcohol section URL in a new browser tab.
-        Expected Result: The age verification modal reappears in the new tab, requiring the user to re-enter their age.
-        """
-        # Create a StorePage object.
-        store_page = StorePage(self.driver)
+    def test_age_modal_reappears_in_new_tab(self):
+        store = StorePage(self.driver)
         wait = self.wait
 
-        # Step 1: Open the Store page and handle Age Verification.
-        store_page.open()
-        store_page.handle_age_verification("01-01-2000")
-        time.sleep(2)
+        # Step 1: open shop & verify age
+        store.open()
+        store.handle_age_verification("01-01-2000")
+        time.sleep(1)
 
-        # Step 2: Find the Alcohol link in the left menu.
+        # Step 2: grab alcohol URL
+        elem = wait.until(EC.element_to_be_clickable(StorePage.ALCOHOL_LINK))
+        url = elem.get_attribute("href")
+
+        # Step 3: open in new tab
+        self.driver.execute_script("window.open(arguments[0]);", url)
+        time.sleep(1)
+        self.driver.switch_to.window(self.driver.window_handles[-1])
+
+        # Step 4: modal should reappear
         try:
-            alcohol_link_element = wait.until(EC.element_to_be_clickable(
-                (By.XPATH, "//div[contains(@class, 'widget widget-menu')]//ul/li/a[normalize-space()='Alocohol']")
-            ))
+            wait.until(EC.visibility_of_element_located(store.AGE_MODAL))
         except TimeoutException:
-            pytest.fail("Alcohol link not found on the Store page.")
-
-        # Get the href attribute of the alcohol link.
-        alcohol_url = alcohol_link_element.get_attribute("href")
-        if not alcohol_url:
-            pytest.fail("Alcohol link does not have a valid URL.")
-
-        # Step 3: Open the Alcohol URL in a new browser tab.
-        self.driver.execute_script("window.open(arguments[0]);", alcohol_url)
-        time.sleep(2)
-        # Switch to the new tab (the last handle)
-        window_handles = self.driver.window_handles
-        self.driver.switch_to.window(window_handles[-1])
-        time.sleep(2)
-
-        # Step 4: Verify that the age verification modal appears in the new tab.
-        try:
-            modal = wait.until(EC.visibility_of_element_located(store_page.age_modal))
-            print("✅ Age verification modal reappeared in the new tab.")
-        except TimeoutException:
-            pytest.fail("❌ Age verification modal did not reappear in the new tab.")
+            pytest.fail("Age modal did not reappear in new tab")

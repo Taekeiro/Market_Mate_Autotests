@@ -1,25 +1,26 @@
 from selenium.webdriver.common.by import By
-from utils.constants import LOGIN_URL
-
 
 class LoginPage:
+    # Locators
+    LOGIN_URL = "https://grocerymate.masterschool.com/auth"
+    EMAIL_INPUT = (By.XPATH, "//input[@type='email']")
+    PASSWORD_INPUT = (By.XPATH, "//input[@type='password']")
+    SIGN_IN_BUTTON = (By.XPATH, "//button[@type='submit' and normalize-space()='Sign In']")
+
     def __init__(self, driver):
         self.driver = driver
-        self.email_input = (By.XPATH, "//input[@type='email']")
-        self.password_input = (By.XPATH, "//input[@type='password']")
-        self.login_button = (By.XPATH, "//button[@type='submit' and contains(., 'Sign In')]")
 
     def open(self):
-        self.driver.get(LOGIN_URL)
-        self.wait_for_page_load()
+        """Navigate to the login page, clearing any existing session first."""
+        self.driver.delete_all_cookies()
+        self.driver.get(self.LOGIN_URL)
 
-    def wait_for_page_load(self, timeout=15):
-        from selenium.webdriver.support.ui import WebDriverWait
-        WebDriverWait(self.driver, timeout).until(
-            lambda d: d.execute_script("return document.readyState") == "complete"
-        )
-
-    def login(self, email, password):
-        self.driver.find_element(*self.email_input).send_keys(email)
-        self.driver.find_element(*self.password_input).send_keys(password)
-        self.driver.find_element(*self.login_button).click()
+    def login(self, email: str, password: str):
+        """
+        Perform login using provided credentials.
+        :param email: user email
+        :param password: user password
+        """
+        self.driver.find_element(*self.EMAIL_INPUT).send_keys(email)
+        self.driver.find_element(*self.PASSWORD_INPUT).send_keys(password)
+        self.driver.find_element(*self.SIGN_IN_BUTTON).click()

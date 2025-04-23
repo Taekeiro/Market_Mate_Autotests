@@ -1,21 +1,39 @@
 from selenium.webdriver.common.by import By
-
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 class RatingPage:
+    REVIEW_WIDGET       = (By.XPATH, "//div[contains(@class,'new-review-card-body')]")
+    RESTRICTION_MESSAGE = (By.XPATH, "//div[@class='reviewRestriction']/p")
+    ERROR_POPUP         = (By.XPATH, "//div[@role='status' and contains(@class,'go3958317564')]")
+
     def __init__(self, driver):
         self.driver = driver
-        # For submitting a rating
-        self.five_star = (By.XPATH, "(//div[contains(@class, 'interactive-rating')]/span)[5]")
-        self.new_review_textarea = (By.XPATH, "//textarea[contains(@class, 'new-review-form-control')]")
-        self.send_button = (By.XPATH, "//button[contains(@class, 'new-review-btn-send')]")
-        # For dropdown actions (edit and delete)
-        self.menu_icon = (By.XPATH, "//div[@class='menu-icon']")
-        self.dropdown_edit = (By.XPATH, "//div[@class='dropdown-menu']//button[normalize-space()='Edit']")
-        self.dropdown_delete = (By.XPATH, "//div[@class='dropdown-menu']//button[normalize-space()='Delete']")
+        self.wait = WebDriverWait(driver, 10)
 
-    def submit_rating(self, rating, comment):
-        if rating == 5:
-            self.driver.find_element(*self.five_star).click()
-        self.driver.find_element(*self.new_review_textarea).clear()
-        self.driver.find_element(*self.new_review_textarea).send_keys(comment)
-        self.driver.find_element(*self.send_button).click()
+    def submit_rating(self, stars: int, comment: str):
+        """Select stars, enter comment, and click Send."""
+        self.wait.until(EC.visibility_of_element_located(self.REVIEW_WIDGET))
+        # click stars
+        for i in range(stars):
+            star = self.driver.find_element(
+                By.XPATH,
+                f"(//div[contains(@class,'interactive-rating')]/span)[{i+1}]"
+            )
+            star.click()
+        # enter comment
+        textarea = self.driver.find_element(
+            By.XPATH, "//textarea[contains(@class,'new-review-form-control')]"
+        )
+        textarea.clear()
+        textarea.send_keys(comment)
+        # click Send
+        send_button = self.driver.find_element(
+            By.XPATH, "//button[contains(@class,'new-review-btn-send')]"
+        )
+        send_button.click()
+
+    def get_error_popup_text(self) -> str:
+        """Wait for error popup and return its text."""
+        popup = self.wait.until(EC.visibility_of_element_located(self.ERROR_POPUP))
+        return popup.text.strip()

@@ -3,20 +3,20 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
 
-
-@pytest.fixture(scope="function")
+@pytest.fixture(scope="function", autouse=True)
 def driver_init(request):
-    chrome_options = Options()
-    chrome_options.add_argument("--incognito")
+    opts = Options()
+    opts.add_argument("--incognito")
     prefs = {
         "credentials_enable_service": False,
         "profile.password_manager_enabled": False
     }
-    chrome_options.add_experimental_option("prefs", prefs)
-    driver = webdriver.Chrome(options=chrome_options)
+    opts.add_experimental_option("prefs", prefs)
+    driver = webdriver.Chrome(options=opts)
     driver.maximize_window()
+
     request.cls.driver = driver
-    # Use a wait timeout of 15 seconds
-    request.cls.wait = WebDriverWait(driver, 15)
+    request.cls.wait = WebDriverWait(driver, 10)
+
     yield
     driver.quit()

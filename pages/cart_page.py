@@ -1,31 +1,44 @@
-from selenium.webdriver.common.by import By
+# pages/cart_page.py
 import time
-
+from selenium.webdriver.common.by import By
+from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 class CartPage:
+    CART_ICON      = (By.XPATH, "(//div[@class='social-icon-cont']//div[contains(@class,'headerIcon')])[3]")
+    REMOVE_ICON    = (By.XPATH, "//a[@class='remove-icon']")
+    QUANTITY_INPUT = (By.XPATH, "//input[contains(@class,'quantity')]")
+
     def __init__(self, driver):
         self.driver = driver
-        self.cart_icon = (By.XPATH, "(//div[@class='social-icon-cont']//div[contains(@class, 'headerIcon')])[3]")
-        self.remove_icon = (By.XPATH, "//a[@class='remove-icon']")
-        self.quantity_input = (By.XPATH, "//input[contains(@class, 'quantity')]")
-        self.shipment_cost = (By.XPATH, "//div[contains(@class, 'shipment-container')]/h5[2]")
+        self.wait   = WebDriverWait(driver, 10)
 
     def open_cart(self):
-        self.driver.find_element(*self.cart_icon).click()
-        time.sleep(2)
+        """Клик по иконке корзины."""
+        self.driver.find_element(*self.CART_ICON).click()
 
     def clear_cart(self):
+        """
+        delete all products from cart
+        """
+        self.open_cart()
+        time.sleep(1)
         while True:
             try:
-                self.driver.find_element(*self.remove_icon).click()
-                time.sleep(1)
+                remove = self.wait.until(EC.element_to_be_clickable(self.REMOVE_ICON))
+                remove.click()
+                time.sleep(0.5)
             except Exception:
                 break
-        self.driver.refresh()
-        time.sleep(2)
 
     def get_quantity(self):
-        return self.driver.find_element(*self.quantity_input).get_attribute("value")
-
-    def get_shipment_cost(self):
-        return self.driver.find_element(*self.shipment_cost).text.strip()
+        """
+        Возвращает текущее значение в поле quantity.
+        Если поле не найдено, значит корзина пуста — возвращаем "0".
+        """
+        try:
+            elem = self.driver.find_element(*self.QUANTITY_INPUT)
+            return elem.get_attribute("value")
+        except NoSuchElementException:
+            return "0"
