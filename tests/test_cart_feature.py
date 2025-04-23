@@ -1,10 +1,6 @@
-# tests/test_cart_feature.py
 import pytest
 import time
-
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support import expected_conditions as EC
-
 from pages.login_page import LoginPage
 from pages.store_page import StorePage
 from pages.cart_page import CartPage

@@ -1,4 +1,3 @@
-# pages/cart_page.py
 import time
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import NoSuchElementException
@@ -15,7 +14,7 @@ class CartPage:
         self.wait   = WebDriverWait(driver, 10)
 
     def open_cart(self):
-        """Клик по иконке корзины."""
+        """Cart icon click."""
         self.driver.find_element(*self.CART_ICON).click()
 
     def clear_cart(self):
@@ -34,8 +33,8 @@ class CartPage:
 
     def get_quantity(self):
         """
-        Возвращает текущее значение в поле quantity.
-        Если поле не найдено, значит корзина пуста — возвращаем "0".
+        Returns the current value of the `quantity` field.
+        If the field isn’t found, it means the cart is empty — return "0".
         """
         try:
             elem = self.driver.find_element(*self.QUANTITY_INPUT)

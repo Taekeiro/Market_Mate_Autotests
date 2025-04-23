@@ -8,6 +8,7 @@ from pages.login_page import LoginPage
 from pages.store_page import StorePage
 from utils.constants import VALID_USER
 
+
 @pytest.mark.usefixtures("driver_init")
 class TestAgeVerification:
     def test_age_verification_valid(self):
@@ -56,4 +57,3 @@ class TestAgeVerification:
         with pytest.raises(TimeoutException):
             # should time out finding any product cards
             self.wait.until(EC.presence_of_element_located(StorePage.PRODUCT_CARDS))
-

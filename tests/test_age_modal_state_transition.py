@@ -1,11 +1,9 @@
 import pytest
 import time
 from selenium.common.exceptions import TimeoutException
-from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
-
 from pages.store_page import StorePage
-from utils.constants import PRODUCT_PAGE_URL, VALID_USER
+
 
 @pytest.mark.usefixtures("driver_init")
 class TestAgeModalStateTransition:
