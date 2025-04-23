@@ -2,12 +2,12 @@ from selenium.webdriver.common.by import By
 from pages.base_page import BasePage
 from utils.constants import LOGIN_URL
 
+
 class LoginPage(BasePage):
     # Locators
     EMAIL_INPUT = (By.XPATH, "//input[@type='email']")
     PASSWORD_INPUT = (By.XPATH, "//input[@type='password']")
     SIGNIN_BUTTON = (By.XPATH, "//button[@type='submit' and normalize-space()='Sign In']")
-
 
     def open(self):
         """Navigate to the login page, clearing any existing session first."""

@@ -6,6 +6,7 @@ from pages.store_page import StorePage
 from pages.cart_page import CartPage
 from utils.constants import VALID_USER
 
+
 @pytest.mark.usefixtures("driver_init")
 class TestCartFeature:
 
@@ -26,7 +27,6 @@ class TestCartFeature:
         # cart should be empty: no quantity input visible
         with pytest.raises(TimeoutException):
             cart.wait_for_visible(CartPage.QUANTITY_INPUT)
-
 
     def test_add_item_and_verify_quantity(self):
         login = LoginPage(self.driver)

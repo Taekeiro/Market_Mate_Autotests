@@ -1,6 +1,7 @@
 from selenium.webdriver.common.by import By
 from pages.base_page import BasePage
 
+
 class RatingPage(BasePage):
     REVIEW_WIDGET       = (By.XPATH, "//div[contains(@class,'new-review-card-body')]")
     RESTRICTION_MESSAGE = (By.XPATH, "//div[@class='reviewRestriction']/p")

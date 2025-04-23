@@ -2,6 +2,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from pages.base_page import BasePage
 
+
 class StorePage(BasePage):
     URL               = "https://grocerymate.masterschool.com/store"
     AGE_MODAL         = (By.XPATH, "//div[@class='modal-content']")
@@ -15,7 +16,6 @@ class StorePage(BasePage):
                  "(//div[@class='social-icon-cont']//div[contains(@class,'headerIcon')])[3]")
     ALCOHOL_LINK = (By.XPATH,
                     "//div[contains(@class,'widget widget-menu')]//ul/li/a[normalize-space()='Alocohol']")
-
 
     def open(self):
         """Navigate to the store page."""

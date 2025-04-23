@@ -9,6 +9,7 @@ from pages.rating_page import RatingPage
 from utils.constants import VALID_USER
 from utils.checkout import complete_checkout
 
+
 @pytest.mark.usefixtures("driver_init")
 class TestRating:
     def test_submit_valid_rating_and_feedback(self):

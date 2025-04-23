@@ -2,6 +2,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from pages.base_page import BasePage
 
+
 class CartPage(BasePage):
     """Page object for the shopping cart."""
 
@@ -9,7 +10,7 @@ class CartPage(BasePage):
     CART_ICON      = (By.XPATH, "(//div[@class='social-icon-cont']//div[contains(@class,'headerIcon')])[3]")
     QUANTITY_INPUT = (By.CSS_SELECTOR, "input.quantity-input")
     REMOVE_ICON    = (By.XPATH, "//a[@class='remove-icon']")
-    REMOVE_BTN = (By.XPATH, "//button[normalize-space()='Remove']")
+    REMOVE_BTN     = (By.XPATH, "//button[normalize-space()='Remove']")
     PLUS_BUTTON    = (By.XPATH, "//button[contains(@class,'plus')]")
     SHIPPING_COST  = (By.XPATH, "//div[contains(@class,'shipment-container')]/h5[2]")
 

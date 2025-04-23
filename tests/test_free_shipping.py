@@ -4,7 +4,7 @@ from pages.login_page import LoginPage
 from pages.store_page import StorePage
 from pages.cart_page import CartPage
 from utils.constants import VALID_USER
-from utils.checkout import complete_checkout
+
 
 @pytest.mark.usefixtures("driver_init")
 class TestFreeShipping:
