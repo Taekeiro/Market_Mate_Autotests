@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.swp
+
+# Virtual environment
+.venv/
+env/
+venv/
+
+# PyCharm files
+*.iml
+.idea/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+.pytest_cache/
+*.sqlite
